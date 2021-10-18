@@ -19,6 +19,10 @@ In Obsidian, navigate to **Settings > Community Plugins**, turn off **Safe mode*
 Alternatively, clone/download this repository, and copy its contents to you vault's `.obsidian/plugins/obsidian-link-archive` folder and then enable it under **Settings > Community Plugins** (the note about disabling above applies here as well).
 ## Changelog
 
+**v0.1.1**
+
+- Added missing license.
+
 **v0.1.0**
 
 Initial release.
