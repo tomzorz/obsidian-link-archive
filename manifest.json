@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.1",
+	"id": "obsidian-link-archive",
+	"name": "Link Archive",
+	"version": "0.1.0",
 	"minAppVersion": "0.9.12",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md/about",
+	"description": "This plugin archives links in your note so they're available to you even if the original site goes down or gets removed.",
+	"author": "Tamás Deme - @tomzorz_",
+	"authorUrl": "https://tomzorz.me",
 	"isDesktopOnly": false
 }
