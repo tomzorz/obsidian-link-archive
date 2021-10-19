@@ -51,6 +51,9 @@ export default class ObsidianLinkArchivePlugin extends Plugin {
 
 					if(viewData.substring(urlRegex.lastIndex, urlRegex.lastIndex + 14).contains(archiveText)) continue;
 
+					// replace clean logic with 
+					// IF next link is the same except with archiveorg in front of it, skip it
+
 					reverseArray.unshift([linkArray[0], urlRegex.lastIndex]);
 				}
 				
@@ -131,6 +134,8 @@ class LinkArchiveSettingTab extends PluginSettingTab {
 		let {containerEl} = this;
 
 		containerEl.empty();
+
+		// add archive link text customization option
 
 		// containerEl.createEl('h2', {text: 'Archive Settings'});
 

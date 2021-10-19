@@ -16,7 +16,8 @@ The plugin will attempt not to recreate archive links for already-archived links
 
 In Obsidian, navigate to **Settings > Community Plugins**, turn off **Safe mode** if you haven't yet, then press the **Browse** button - you should be able to find it in the list there.
 
-Alternatively, clone/download this repository, and copy its contents to you vault's `.obsidian/plugins/obsidian-link-archive` folder and then enable it under **Settings > Community Plugins** (the note about disabling above applies here as well).
+Alternatively, download the latest release of the repository, and copy the `main.js`, `manifest.json` and `style.css` files to you vault's `.obsidian/plugins/obsidian-link-archive` folder and then enable it under **Settings > Community Plugins** (the note about disabling above applies here as well).
+
 ## Changelog
 
 **v0.1.1**
