@@ -20,6 +20,15 @@ Alternatively, download the latest release of the repository, and copy the `main
 
 ## Changelog
 
+**v0.2.0**
+
+- Added error handling.
+- Plugin properly handles markdown links.
+- Added better progress reporting.
+- Refactored plugin into multiple files.
+- Added a setting for a custom link text.
+- Improved logic for detecting already-archived links.
+
 **v0.1.1**
 
 - Added missing license.
@@ -31,4 +40,3 @@ Initial release.
 ## Future plans
 
 - Support for other archive providers
-- Custom formatting for archive links
