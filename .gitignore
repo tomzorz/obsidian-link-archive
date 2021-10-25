@@ -1,14 +1,13 @@
 # Intellij
 *.iml
 .idea
-
 # npm
 node_modules
 package-lock.json
-
 # build
 main.js
 *.js.map
-
 # obsidian
 data.json
+/Folder.DotSettings.user
+.vs
