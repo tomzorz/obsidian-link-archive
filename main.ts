@@ -1,8 +1,19 @@
 import { MarkdownView, Notice, Plugin, request } from "obsidian";
 import { waybackSaveUrl, waybackUrl } from "./constants";
-import { defaultSettings as DEFAULT_SETTINGS, LinkArchivePluginSettings as LinkArchivePluginSettings, LinkArchiveSettingTab } from "./settings";
+import { defaultSettings as DEFAULT_SETTINGS, LinkArchivePluginSettings as LinkArchivePluginSettings, LinkArchiveSettingTab, LinkReplaceRule } from "./settings";
 
 const urlRegex =/(\b(https?|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
+function replaceLinks(link: string, replaceRules: LinkReplaceRule[]): string {
+	let modifiedLink = link;
+
+	for (const rule of replaceRules) {
+		const regex = new RegExp(rule.originalPattern, "g");
+		modifiedLink = modifiedLink.replace(regex, rule.replacementPattern);
+	}
+
+	return modifiedLink;
+}
 
 export default class ObsidianLinkArchivePlugin extends Plugin {
 	settings: LinkArchivePluginSettings;
@@ -31,22 +42,24 @@ export default class ObsidianLinkArchivePlugin extends Plugin {
 				while ((linkArray = urlRegex.exec(viewData)) !== null) {
 					console.log(`Found ${linkArray[0]}. Next starts at ${urlRegex.lastIndex}.`);
 
-					//if(linkArray[0].startsWith(waybackUrl)) continue;
-
-					//if(viewData.substring(urlRegex.lastIndex, urlRegex.lastIndex + 14).contains(archiveText)) continue;
-
-					// replace clean logic with
-					// IF next link is the same except with archiveorg in front of it, skip it
-
 					reverseArray.unshift([linkArray[0], urlRegex.lastIndex]);
 				}
 
-                console.log(reverseArray);
+				console.log(reverseArray);
 
 				// ReSharper marks the "some" call as an error, but it's actually correct...
-                const cleanedList = reverseArray.filter(x =>
-                    !x[0].startsWith(waybackUrl)
-					&& !reverseArray.some(y => y[0].startsWith(waybackUrl) && y[0].endsWith(x[0])));
+				const cleanedList = reverseArray.filter(x =>
+					// Filtering out links that start with the archive URL
+					!x[0].startsWith(waybackUrl)
+					// Testing if a link does not have an archived version in the reverseArray
+					&& !reverseArray.some(y => 
+						y[0].startsWith(waybackUrl) && y[0].endsWith(x[0]) // Already archived links
+						|| y[0].startsWith(waybackUrl) && y[0].endsWith(replaceLinks(x[0], this.settings.linkReplaceRules)) // Already replaced and archived links
+					)
+					// Testing if the link is not already associated with the archive text in viewData
+					&& !viewData.substring(x[1]+2, x[1]+2 + archiveText.length).includes(archiveText)
+					// Testing if the link is not in the ignore list
+					&& !this.settings.ignoreUrlPatterns.some(pattern => new RegExp(pattern).test(x[0])));
 
 				console.log(cleanedList);
 
@@ -62,12 +75,13 @@ export default class ObsidianLinkArchivePlugin extends Plugin {
 
 				for (const tuple of cleanedList) {
 					const currentLink = tuple[0];
+					const replacedLink = replaceLinks(currentLink, this.settings.linkReplaceRules);
 					const saveLink = `${waybackSaveUrl}${currentLink}`;
-					const archiveLink = ` ${archiveText}(${waybackUrl}${dateLinkPart}/${currentLink})`;
+					const archiveLink = ` ${archiveText}(${waybackUrl}${dateLinkPart}/${replacedLink})`;
                     const extraOffset = viewData.charAt(tuple[1]) === ")" ? 1 : 0;
 					const offset = view.editor.offsetToPos(tuple[1] + extraOffset);
-					const message = `(${i}/${totalLinks}) Successfully archived ${currentLink}!`;
-					const failMessage = `(${i}/${totalLinks}) Failed to archive ${currentLink}!`;
+					const message = `(${i}/${totalLinks}) Successfully archived ${replacedLink}!`;
+					const failMessage = `(${i}/${totalLinks}) Failed to archive ${replacedLink}!`;
                     i += 1;
 
                     await this.delay(400);
